@@ -1,4 +1,11 @@
 <?php
+use App\Http\Livewire\CartComponent;
+use App\Http\Livewire\CheckoutComponent;
+use App\Http\Livewire\HomeComponent;
+use App\Http\Livewire\ShopComponent;
+use App\Http\Livewire\Admin\AdminDashboardComponent;
+
+use App\Http\Livewire\User\UserDashboardComponent;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -14,27 +21,43 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', HomeComponent::class);
+Route::get('shop', ShopComponent::class);
+Route::get('cart', CartComponent::class);
+Route::get('checkout', CheckoutComponent::class);
+
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
+
+//For User or Customer
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/user/dashboard', UserDashboardComponent::class)->name('user.dashboard');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+//For Admin
+Route::middleware(['auth:sanctum', 'verified', 'authadmin'])->group(function () {
+    Route::get('/admin/dashboard', AdminDashboardComponent::class)->name('admin.dashboard');
 });
 
-Route::get('/data', function () {
+//For check
+Route::get('check', function () {
     $users = DB::table('users')->get();
     $media = DB::table('media')->get();
     $layanan = DB::table('services')->get();
     $atribut = DB::table('attributes')->get();
     $kategori = DB::table('categories')->get();
-    // $layanan_atribut = DB::table('layanan_atributs')->get();
+    // $layanan_atribut = DB::table('services_attributes')->get();
 
     //dd($users, $media, $kategori, $atribut, $layanan);
     return [
