@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,9 +21,27 @@ Route::get('/', function () {
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified'
+    'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::get('/data', function () {
+    $users = DB::table('users')->get();
+    $media = DB::table('media')->get();
+    $layanan = DB::table('services')->get();
+    $atribut = DB::table('attributes')->get();
+    $kategori = DB::table('categories')->get();
+    // $layanan_atribut = DB::table('layanan_atributs')->get();
+
+    //dd($users, $media, $kategori, $atribut, $layanan);
+    return [
+        "user" => $users,
+        "media" => $media,
+        "layanan" => $layanan,
+        "atribut" => $atribut,
+        "kategori" => $kategori,
+    ];
 });
