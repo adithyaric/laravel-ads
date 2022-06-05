@@ -1,44 +1,19 @@
 <?php
+use App\Http\Livewire\Admin\AdminAddCategoryComponent;
+use App\Http\Livewire\Admin\AdminEditCategoryComponent;
+use App\Http\Livewire\Admin\AdminCategoryComponent;
+use App\Http\Livewire\Admin\AdminDashboardComponent;
 use App\Http\Livewire\CartComponent;
 use App\Http\Livewire\CheckoutComponent;
 use App\Http\Livewire\HomeComponent;
 use App\Http\Livewire\ShopComponent;
-use App\Http\Livewire\Admin\AdminDashboardComponent;
-
 use App\Http\Livewire\User\UserDashboardComponent;
-
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Route::get('/', HomeComponent::class);
 Route::get('shop', ShopComponent::class);
 Route::get('cart', CartComponent::class);
 Route::get('checkout', CheckoutComponent::class);
-
-// Route::middleware([
-//     'auth:sanctum',
-//     config('jetstream.auth_session'),
-//     'verified',
-// ])->group(function () {
-//     Route::get('/dashboard', function () {
-//         return view('dashboard');
-//     })->name('dashboard');
-// });
 
 //For User or Customer
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -48,23 +23,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 //For Admin
 Route::middleware(['auth:sanctum', 'verified', 'authadmin'])->group(function () {
     Route::get('/admin/dashboard', AdminDashboardComponent::class)->name('admin.dashboard');
-});
 
-//For check
-Route::get('check', function () {
-    $users = DB::table('users')->get();
-    $media = DB::table('media')->get();
-    $layanan = DB::table('services')->get();
-    $atribut = DB::table('attributes')->get();
-    $kategori = DB::table('categories')->get();
-    // $layanan_atribut = DB::table('services_attributes')->get();
-
-    //dd($users, $media, $kategori, $atribut, $layanan);
-    return [
-        "user" => $users,
-        "media" => $media,
-        "layanan" => $layanan,
-        "atribut" => $atribut,
-        "kategori" => $kategori,
-    ];
+    //CRUD Category
+    Route::get('/admin/categories', AdminCategoryComponent::class)->name('admin.categories');
+    Route::get('/admin/category/add', AdminAddCategoryComponent::class)->name('admin.addcategory');
+    Route::get('/admin/category/edit/{category_slug}', AdminEditCategoryComponent::class)->name('admin.editcategory');
 });
