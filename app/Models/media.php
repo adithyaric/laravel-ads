@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Media extends Model
 {
     use HasFactory;
+
+    public function service()
+    {
+        return $this->hasMany(Service::class);
+    }
 }
