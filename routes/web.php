@@ -1,8 +1,12 @@
 <?php
+
+use App\Http\Livewire\Admin\AdminAddAttributeComponent;
 use App\Http\Livewire\Admin\AdminAddCategoryComponent;
 use App\Http\Livewire\Admin\AdminAddServiceComponent;
+use App\Http\Livewire\Admin\AdminAttributeComponent;
 use App\Http\Livewire\Admin\AdminCategoryComponent;
 use App\Http\Livewire\Admin\AdminDashboardComponent;
+use App\Http\Livewire\Admin\AdminEditAttributeComponent;
 use App\Http\Livewire\Admin\AdminEditCategoryComponent;
 use App\Http\Livewire\Admin\AdminEditServiceComponent;
 use App\Http\Livewire\Admin\AdminServiceComponent;
@@ -11,6 +15,7 @@ use App\Http\Livewire\CheckoutComponent;
 use App\Http\Livewire\HomeComponent;
 use App\Http\Livewire\ShopComponent;
 use App\Http\Livewire\User\UserDashboardComponent;
+use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\Service;
@@ -40,6 +45,11 @@ Route::middleware(['auth:sanctum', 'verified', 'authadmin'])->group(function () 
     Route::get('/admin/service/add', AdminAddServiceComponent::class)->name('admin.addservice');
     Route::get('/admin/service/edit/{id}', AdminEditServiceComponent::class)->name('admin.editservice');
 
+    //CRUD Attribute
+    Route::get('/admin/attribute', AdminAttributeComponent::class)->name('admin.attribute');
+    Route::get('/admin/attribute/add', AdminAddAttributeComponent::class)->name('admin.addattribute');
+    Route::get('/admin/attribute/edit/{id}', AdminEditAttributeComponent::class)->name('admin.editattribute');
+
 });
 
 Route::get('/service/{id}', function ($id) {
@@ -50,6 +60,11 @@ Route::get('/service/{id}', function ($id) {
 Route::get('/category/{id}', function ($id) {
     $category = Category::with('service')->find($id);
     return response()->json($category, 200);
+});
+
+Route::get('attribute', function () {
+    $attribute = Attribute::all();
+    return response()->json($attribute, 200);
 });
 
 Route::get('/media/{id}', function ($id) {
